@@ -1,6 +1,6 @@
 # bencode
 
-Bencode encoding an decoding in Clojure.
+Bencode encoding and decoding in Clojure.
 
 ```clj
 ;; decode works with strings or byte-arrays, and returns a pair of the
