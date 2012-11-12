@@ -1,4 +1,5 @@
 (ns za.bencode-test
+  (:refer-clojure :exclude [num list])
   (:use [za.bencode]
         [za.test-util]
         [midje.sweet]))
