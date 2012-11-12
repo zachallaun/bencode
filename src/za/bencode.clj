@@ -10,11 +10,6 @@
         [acc x]
         (recur (conj acc (first result)) (second result))))))
 
-(defn byteseq
-  "Accepts a string, returns a sequence of bytes."
-  [s]
-  (map #(-> % int byte) s))
-
 (defn char<=
   [& cs]
   (apply <= (map int cs)))
@@ -117,6 +112,11 @@
   (-decode (map char bin)))
 
 ;;; Bencoding
+
+(defn byteseq
+  "Accepts a string, returns a sequence of bytes."
+  [s]
+  (map #(-> % int byte) s))
 
 (defn char->byte
   [c]
