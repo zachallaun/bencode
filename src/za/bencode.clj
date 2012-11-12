@@ -123,16 +123,16 @@
   (byte (int c)))
 
 (defprotocol Bencodable
-  (-encode [data]))
+  (encode [data]))
 
 (extend-type String
   Bencodable
-  (-encode [string]
+  (encode [string]
     (byteseq (str (count string) \: string))))
 
 (extend-type Long
   Bencodable
-  (-encode [n]
+  (encode [n]
     (byteseq (str \i n \e))))
 
 (defn encode-sequence [s]
@@ -143,12 +143,12 @@
 
 (extend-type clojure.lang.LazySeq
   Bencodable
-  (-encode [s]
+  (encode [s]
     (encode-list s)))
 
 (extend-type clojure.lang.PersistentVector
   Bencodable
-  (-encode [s]
+  (encode [s]
     (encode-list s)))
 
 (defn encode-map
@@ -158,11 +158,11 @@
 
 (extend-type clojure.lang.PersistentHashMap
   Bencodable
-  (-encode [m]
+  (encode [m]
     (encode-map m)))
 
 (extend-type clojure.lang.PersistentArrayMap
   Bencodable
-  (-encode [m]
+  (encode [m]
     (encode-map m)))
 
