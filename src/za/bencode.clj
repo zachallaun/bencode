@@ -83,8 +83,25 @@
   [[_ & bin]]
   (with-end list bin))
 
+(defn kv
+  [bin]
+  (when-let [[key more] (string bin)]
+    (when-let [[val more] (-decode more)]
+      [[key val] more])))
+
 (defmethod -decode \d
-  [[_ & bin]])
+  [[_ & bin]]
+  (when-let [[dict more] (with-end #(unfold (complement seq) kv %) bin)]
+    [(into {} dict) more]))
+
+(defn string
+  [bin]
+  (when-let [[len more] (num bin)]
+    (when-let [more (and (= \: (first more))
+                         (rest more))]
+      [(apply str (take len more))
+       (drop len more)])))
 
 (defmethod -decode :default
-  [[_ & bin]])
+  [bin]
+  (string bin))

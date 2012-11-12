@@ -47,8 +47,19 @@
 (fact "about list decoding"
       (decode "li1ei2ei3ee") => [[1 2 3] nil]
       (decode "li-1ei-2ei-3ee") => [[-1 -2 -3] nil]
-      (decode "li1ei2ei3eexxx") => [[1 2 3] [\x \x \x]])
+      (decode "li1ei2ei3eexxx") => [[1 2 3] [\x \x \x]]
+      (decode "ld1:ai0eee") => [[{"a" 0}] nil])
 
 (fact "about poorly-formed list decoding"
       (decode "li1ei2ei3exe") => nil?)
 
+(fact "about string decoding"
+      (decode "3:foo") => ["foo" ()]
+      (decode "3:foobar") => ["foo" [\b \a \r]])
+
+(fact "about poorly-formed string decoding"
+      (decode "3x:foo") => nil?)
+
+(fact "about dictionary decoding"
+      (decode "d1:ai0e1:bi1ee") => [{"a" 0 "b" 1} nil]
+      (decode "d1:ali0ei1ei2eee") => [{"a" [0 1 2]} nil])
