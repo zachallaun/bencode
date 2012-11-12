@@ -15,13 +15,4 @@
                   [(first xs) (rest xs)]
                   :stop-unfold))
               [1 2 3])
-      => [1 2 3])
-
-(fact "about infinite unfold"
-      (take 5 (unfold #(= % :stop-unfold)
-                      (fn [xs]
-                        (if (seq xs)
-                          [(first xs) (rest xs)]
-                          :stop-unfold))
-                      (range)))
-      => [0 1 2 3 4])
+      => [[1 2 3] []])
