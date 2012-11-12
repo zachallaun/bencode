@@ -3,9 +3,9 @@
 Bencode encoding and decoding in Clojure.
 
 ```clj
-;; decode works with strings or byte-arrays, and returns a pair of the
+;; `decode` works with strings or byte-arrays, and returns a pair of the
 ;; parsed value and the remaining, unparsed characters. (These could be
-;; passed back into decode.)
+;; passed back into `decode`.)
 
 (decode "i1337e")
 ;;=> [1337 nil]
@@ -25,8 +25,9 @@ Bencode encoding and decoding in Clojure.
 (decode "d3:fooi1e3:bari2ee")
 ;;=> [{"foo" 1 "bar" 2} nil]
 
-;; encode accepts a bencodable data structure and returns a byte-array.
-;; For the sake of example, I'll pretend that strings are returned.
+;; `encode` accepts a bencodable data structure and returns a byte-array.
+;; For the sake of example, I'll show the return value as a string. This
+;; conversion could be done with `(apply str (map char (encode xxx)))`.
 
 (encode 1)
 ;;=> "i1e"
