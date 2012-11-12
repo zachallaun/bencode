@@ -39,27 +39,6 @@
     [x rest]
     [\+ bin]))
 
-(defn num
-  [bin]
-  (let [[sign bin] (with-sign bin)
-        [digits rest] (unfold nil? digit bin)]
-    (when (seq digits)
-      [(read-chars (cons sign digits)) rest])))
-
-(defmulti -decode
-  (fn [bin]
-    (first bin)))
-
-(defn decode
-  "Decodes a bencoded byte string.
-
-  \"i42e\" => 42
-  \"5:hello\" => \"hello\"
-  \"li42e3:fooe\" => (42, \"foo\")
-  \"d3:fooi1e3:bari2e\" => {\"foo\" 1 \"bar\" 2}"
-  [bin]
-  (-decode (map char bin)))
-
 (defn with-end
   "Checks that unparsed characters start with char e, then returns the parse
   result and the rest.
@@ -71,9 +50,26 @@
     (when (end? e)
       [x rest])))
 
+;;; Bencode decoding
+
+(defmulti -decode
+  (fn [bin]
+    (first bin)))
+
+;;; Integers
+
+(defn num
+  [bin]
+  (let [[sign bin] (with-sign bin)
+        [digits rest] (unfold nil? digit bin)]
+    (when (seq digits)
+      [(read-chars (cons sign digits)) rest])))
+
 (defmethod -decode \i
   [[_ & bin]]
   (with-end num bin))
+
+;;; Lists
 
 (defn list
   [bin]
@@ -83,16 +79,7 @@
   [[_ & bin]]
   (with-end list bin))
 
-(defn kv
-  [bin]
-  (when-let [[key more] (string bin)]
-    (when-let [[val more] (-decode more)]
-      [[key val] more])))
-
-(defmethod -decode \d
-  [[_ & bin]]
-  (when-let [[dict more] (with-end #(unfold (complement seq) kv %) bin)]
-    [(into {} dict) more]))
+;;; Strings
 
 (defn string
   [bin]
@@ -105,3 +92,26 @@
 (defmethod -decode :default
   [bin]
   (string bin))
+
+;;; Dictionaries
+
+(defn kv
+  [bin]
+  (when-let [[key more] (string bin)]
+    (when-let [[val more] (-decode more)]
+      [[key val] more])))
+
+(defmethod -decode \d
+  [[_ & bin]]
+  (when-let [[dict more] (with-end #(unfold (complement seq) kv %) bin)]
+    [(into {} dict) more]))
+
+(defn decode
+  "Decodes a bencoded byte string.
+
+  \"i42e\" => 42
+  \"5:hello\" => \"hello\"
+  \"li42e3:fooe\" => (42, \"foo\")
+  \"d3:fooi1e3:bari2e\" => {\"foo\" 1 \"bar\" 2}"
+  [bin]
+  (-decode (map char bin)))
