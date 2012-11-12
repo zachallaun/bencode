@@ -65,5 +65,20 @@
       (decode "d1:ai0e1:bi1ee") => [{"a" 0 "b" 1} nil]
       (decode "d1:ali0ei1ei2eee") => [{"a" [0 1 2]} nil])
 
-(fact "TODO: Write encoding tests"
-      true => false)
+(fact "about string encoding"
+      (-encode "foobar") => (map char->byte "6:foobar")
+      (-encode "foo bar") => (map char->byte "7:foo bar"))
+
+(fact "about integer encoding"
+      (-encode 1337) => (map char->byte "i1337e")
+      (-encode -123) => (map char->byte "i-123e"))
+
+(fact "about list encoding"
+      (-encode [1 2 3]) => (map char->byte "li1ei2ei3ee")
+      (-encode [1 [2 [3]]]) => (map char->byte "li1eli2eli3eeee")
+      (-encode ["foo" "bar"]) => (map char->byte "l3:foo3:bare"))
+
+(fact "about map encoding"
+      (-encode {"a" 1}) => (map char->byte "d1:ai1ee")
+      (-encode {:a 1}) => (map char->byte "d1:ai1ee")
+      (-encode {:a {:b {:c "foo"}}}) => (map char->byte "d1:ad1:bd1:c3:fooeee"))
