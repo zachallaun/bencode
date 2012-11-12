@@ -115,3 +115,54 @@
   \"d3:fooi1e3:bari2e\" => {\"foo\" 1 \"bar\" 2}"
   [bin]
   (-decode (map char bin)))
+
+;;; Bencoding
+
+(defn char->byte
+  [c]
+  (byte (int c)))
+
+(defprotocol Bencodable
+  (-encode [data]))
+
+(extend-type String
+  Bencodable
+  (-encode [string]
+    (byteseq (str (count string) \: string))))
+
+(extend-type Long
+  Bencodable
+  (-encode [n]
+    (byteseq (str \i n \e))))
+
+(defn encode-sequence [s]
+  (vec (reduce #(concat (-encode %2) %1) [(char->byte \e)] (reverse s))))
+
+(defn encode-list [l]
+  (cons (char->byte \l) (encode-sequence l)))
+
+(extend-type clojure.lang.LazySeq
+  Bencodable
+  (-encode [s]
+    (encode-list s)))
+
+(extend-type clojure.lang.PersistentVector
+  Bencodable
+  (-encode [s]
+    (encode-list s)))
+
+(defn encode-map
+  [m]
+  (let [kv-seq (reduce (fn [acc [k v]] (conj acc (name k) v)) [] m)]
+    (cons (char->byte \d) (encode-sequence kv-seq))))
+
+(extend-type clojure.lang.PersistentHashMap
+  Bencodable
+  (-encode [m]
+    (encode-map m)))
+
+(extend-type clojure.lang.PersistentArrayMap
+  Bencodable
+  (-encode [m]
+    (encode-map m)))
+

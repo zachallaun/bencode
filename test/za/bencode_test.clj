@@ -64,3 +64,6 @@
 (fact "about dictionary decoding"
       (decode "d1:ai0e1:bi1ee") => [{"a" 0 "b" 1} nil]
       (decode "d1:ali0ei1ei2eee") => [{"a" [0 1 2]} nil])
+
+(fact "TODO: Write encoding tests"
+      true => false)
