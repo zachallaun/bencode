@@ -112,7 +112,10 @@
     [(into {} dict) more]))
 
 (defn decode
-  "Decodes a bencoded stream.
+  "Decodes a bencoded sequence in ISO-8859-1 format. If passing in a
+  slurped file, be sure to specify the encoding:
+
+    (decode (slurp \"path/to/file.torrent\" :encoding \"ISO-8859-1\"))
 
   \"i42e\" => 42
   \"5:hello\" => \"hello\"
