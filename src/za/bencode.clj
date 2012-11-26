@@ -1,6 +1,16 @@
 (ns za.bencode
   (:refer-clojure :exclude [num list]))
 
+(defn file-stream
+  [fname]
+  (let [stream (java.io.FileInputStream. fname)]
+    (letfn [(f [stream]
+              (lazy-seq
+                (let [b (.read stream)]
+                  (when (not= -1 b)
+                    (cons b (f stream))))))]
+      (f stream))))
+
 (defn unfold
   "TODO: unfold docstring"
   [p f x]
@@ -102,14 +112,14 @@
     [(into {} dict) more]))
 
 (defn decode
-  "Decodes a bencoded byte string.
+  "Decodes a bencoded stream.
 
   \"i42e\" => 42
   \"5:hello\" => \"hello\"
   \"li42e3:fooe\" => (42, \"foo\")
   \"d3:fooi1e3:bari2e\" => {\"foo\" 1 \"bar\" 2}"
-  [bin]
-  (-decode (map char bin)))
+  [stream]
+  (first (-decode (map char stream))))
 
 ;;; Bencoding
 
