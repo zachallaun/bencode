@@ -1,7 +1,7 @@
-(ns za.bencode-test
+(ns bencode.bencode-test
   (:refer-clojure :exclude [num list])
-  (:use [za.bencode]
-        [za.test-util]
+  (:use [bencode.bencode]
+        [bencode.test-util]
         [midje.sweet]))
 
 (def byte? (partial instance? java.lang.Byte))

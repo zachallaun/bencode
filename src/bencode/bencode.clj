@@ -1,4 +1,4 @@
-(ns za.bencode
+(ns bencode.bencode
   (:refer-clojure :exclude [num list])
   (:require [flatland.ordered.map :refer [ordered-map]]))
 

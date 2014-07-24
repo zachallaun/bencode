@@ -1,4 +1,4 @@
-(ns za.test-util
+(ns bencode.test-util
   (:use [midje.sweet]))
 
 (defn allfn
