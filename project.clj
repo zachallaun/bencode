@@ -1,4 +1,4 @@
-(defproject za.bencode "0.1.0-SNAPSHOT"
+(defproject za.bencode "0.1.0"
   :description "Bencode encoding and decoding."
   :url "https://github.com/zachallaun/bencode"
   :license {:name "Eclipse Public License"
