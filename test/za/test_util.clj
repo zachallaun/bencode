@@ -12,8 +12,8 @@
           (recur (first more) (rest more)))))))
 
 (fact "about allfn"
-      ((allfn string? #(> (count %) 0)) "foo") => truthy
-      ((allfn string? #(> (count %) 0)) "") => falsey
-      ((allfn string? #(> (count %) 0)) [:foo]) => falsey
-      ((allfn string?) "foo") => truthy
-      ((allfn #(> (count %&) 1)) :foo :bar) => truthy)
+  ((allfn string? #(> (count %) 0)) "foo") => truthy
+  ((allfn string? #(> (count %) 0)) "") => falsey
+  ((allfn string? #(> (count %) 0)) [:foo]) => falsey
+  ((allfn string?) "foo") => truthy
+  ((allfn #(> (count %&) 1)) :foo :bar) => truthy)
