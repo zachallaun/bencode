@@ -2,6 +2,20 @@
 
 Bencode encoding and decoding in Clojure.
 
+## Installation
+Add the following dependency to your `projecet.clj`
+
+```
+[com.zachallaun/bencode "0.1.1-SNAPSHOT"]
+```
+
+## Usage
+Import into your namspace
+
+```clj
+(:require [bencode.bencode :as bencode])
+```
+
 ```clj
 ;; `decode` works with strings or byte-arrays, and returns a pair of the
 ;; parsed value and the remaining, unparsed characters. (These could be
@@ -24,6 +38,9 @@ Bencode encoding and decoding in Clojure.
 
 (decode "d3:fooi1e3:bari2ee")
 ;;=> [{"foo" 1 "bar" 2} nil]
+
+;; to decode from file
+(decode (slurp filename :encoding "ISO-8859-1"))
 
 ;; `encode` accepts a bencodable data structure and returns a byte-array.
 ;; For the sake of example, I'll show the return value as a string. This
