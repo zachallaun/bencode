@@ -83,25 +83,16 @@
   (-encode {:a 1}) => (map char->byte "d1:ai1ee")
   (-encode {:a {:b {:c "foo"}}}) => (map char->byte "d1:ad1:bd1:c3:fooeee"))
 
-(facts "about ordered maps"
-  ;; bencoding requires that maps are ordered. Decoding bencoded data
-  ;; into regular Clojure hash maps isn't good enough, because their
-  ;; order is unspecified.
-  (let [bencoded-kvs (str "1:a" "i1e"
-                          "1:b" "i2e"
-                          "1:c" "i3e"
-                          "1:d" "i4e"
-                          "1:e" "i5e"
-                          "1:f" "i6e"
-                          "1:g" "i7e"
-                          "1:h" "i8e"
-                          "1:i" "i9e")
-        bencoded-dict (str "d" bencoded-kvs "e")]
+(facts "about sorted maps"
+  (let [bencoded-kvs-unsorted (str "1:b" "i2e"
+                                   "1:a" "i1e"
+                                   "1:d" "i4e"
+                                   "1:c" "i3e")
+        bencoded-dict-unsorted (str "d" bencoded-kvs-unsorted "e")
+        bencoded-kvs-sorted (str "1:a" "i1e"
+                                 "1:b" "i2e"
+                                 "1:c" "i3e"
+                                 "1:d" "i4e")
+        bencoded-dict-sorted (str "d" bencoded-kvs-sorted "e")]
     (fact "decoding and re-encoding retains dictionary order"
-      (-encode (decode bencoded-dict)) => (map char->byte bencoded-dict))
-
-    (fact "kv pairs added to a decoded dict show up at the end"
-      (-> (decode bencoded-dict)
-          (assoc "j" 10)
-          (-encode))
-      => (map char->byte (str "d" bencoded-kvs "1:j" "i10e" "e")))))
+      (-encode (decode bencoded-dict-unsorted)) => (map char->byte bencoded-dict-sorted))))
