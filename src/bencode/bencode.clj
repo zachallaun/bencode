@@ -1,6 +1,5 @@
 (ns bencode.bencode
-  (:refer-clojure :exclude [num list])
-  (:require [flatland.ordered.map :refer [ordered-map]]))
+  (:refer-clojure :exclude [num list]))
 
 (defn file-stream
   [fname]
@@ -110,7 +109,7 @@
 (defmethod -decode \d
   [[_ & bin]]
   (when-let [[dict more] (with-end #(unfold (complement seq) kv %) bin)]
-    [(into (ordered-map) dict) more]))
+    [(into {} dict) more]))
 
 (defn decode
   "Decodes a bencoded sequence in ISO-8859-1 format. If passing in a
