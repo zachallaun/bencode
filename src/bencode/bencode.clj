@@ -147,7 +147,7 @@
 
 (defn encode-map
   [m]
-  (let [kv-seq (reduce (fn [acc [k v]] (conj acc (name k) v)) [] m)]
+  (let [kv-seq (reduce (fn [acc [k v]] (conj acc (name k) v)) [] (sort-by first m))]
     (cons (char->byte \d) (encode-sequence kv-seq))))
 
 (extend-protocol Bencodable
